@@ -3,7 +3,7 @@ Game.h
 
 Description
 -----------
-Specifies the game class for the game of pong.
+Specifies the game class for the game of pong (multi-ball pong).
 
 Reference
 ---------
@@ -13,9 +13,12 @@ Game Programming in C++ - Sanjav Madhav
 
 #pragma once
 
+#include "Player2.h"
+
 #include <iostream>
 #include <string>
 #include <SDL2/SDL.h>
+#include <vector>
 
 struct Vector2 {
 	float x;
@@ -75,9 +78,15 @@ private:
 	void generate_output();
 
 	/**
-	* @brief Reset the state of the game.
+	* @brief Adds a new ball to the game.
 	*/
-	void reset_game();
+	void add_ball();
+	
+	/**
+	* @brief Removes a ball(s) from the game.
+	*        Removes both ball positions and velocities.
+	*/
+	void remove_balls(std::vector<int>);
 
 	SDL_Window* m_window;     // window created by SDL
 	SDL_Renderer* m_renderer; // renderer for drawing graphics
@@ -87,14 +96,17 @@ private:
 	// Game objects
 	Vector2 m_player1_paddle_pos;
 	Vector2 m_player2_paddle_pos;
-	Vector2 m_ball_pos;
-	Vector2 m_ball_velocity;
+	std::vector<Vector2> m_ball_positions;   // ith index corresponds to velocity
+	std::vector<Vector2> m_ball_velocities;  // ith index corresponds to position
 
 	int8_t m_paddle1_dir; // 0 stationary; 1 up; -1 down
 	int8_t m_paddle2_dir; // 0 stationary; 1 up; -1 down
 
 	uint16_t m_player1_score;
 	uint16_t m_player2_score;
+
+	// Controller for player 2
+	Player2 m_player2;
 	
 	// Window settings
 	const char* WINDOW_TITLE = "Pong";
