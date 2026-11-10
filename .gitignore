@@ -1,0 +1,7 @@
+.vs/
+/.vs
+vcpkg_installed/
+/vcpkg_installed
+/x64
+x64/
+sim/x64
