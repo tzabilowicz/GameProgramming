@@ -9,6 +9,7 @@ Function definitions for the solar system simulation engine.
 #include "SolarSystem.h"
 
 #include <cmath>
+#include <iostream>
 
 SolarSystemEngine::SolarSystemEngine() :
 	m_window(nullptr),
@@ -17,114 +18,107 @@ SolarSystemEngine::SolarSystemEngine() :
 	m_running(false)
 {
 	// Initialize the planet attributes (in order)
-	m_planet_attributes.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::SUN,
 		solar_constants::SUN_MASS_KG,
 		solar_constants::SUN_RADIUS_KM,
-		solar_constants::SUN_DISTANCE_KM
-	});
-
-	m_planet_attributes.push_back({
-		solar_constants::MERCURY_MASS_KG,
-		solar_constants::MERCURY_RADIUS_KM,
-		solar_constants::MERCURY_DISTANCE_KM
-	});
-
-	m_planet_attributes.push_back({
-		solar_constants::VENUS_MASS_KG,
-		solar_constants::VENUS_RADIUS_KM,
-		solar_constants::VENUS_DISTANCE_KM
-	});
-
-	m_planet_attributes.push_back({
-		solar_constants::EARTH_MASS_KG,
-		solar_constants::EARTH_RADIUS_KM,
-		solar_constants::EARTH_DISTANCE_KM
-	});
-
-	m_planet_attributes.push_back({
-		solar_constants::MARS_MASS_KG,
-		solar_constants::MARS_RADIUS_KM,
-		solar_constants::MARS_DISTANCE_KM
-	});
-
-	m_planet_attributes.push_back({
-		solar_constants::JUPITER_MASS_KG,
-		solar_constants::JUPITER_RADIUS_KM,
-		solar_constants::JUPITER_DISTANCE_KM
-	});
-
-	m_planet_attributes.push_back({
-		solar_constants::SATURN_MASS_KG,
-		solar_constants::SATURN_RADIUS_KM,
-		solar_constants::SATURN_DISTANCE_KM
-	});
-
-	m_planet_attributes.push_back({
-		solar_constants::URANUS_MASS_KG,
-		solar_constants::URANUS_RADIUS_KM,
-		solar_constants::URANUS_DISTANCE_KM
-	});
-
-	m_planet_attributes.push_back({
-		solar_constants::NEPTUNE_MASS_KG,
-		solar_constants::NEPTUNE_RADIUS_KM,
-		solar_constants::NEPTUNE_DISTANCE_KM
-	});
-
-	// Initialize the planet colors (in order)
-	m_planet_colors.push_back({
+		solar_constants::SUN_DISTANCE_KM,
+		solar_constants::SUN_TRACE_POINTS,
 		solar_constants::SUN_R,
 		solar_constants::SUN_G,
 		solar_constants::SUN_B
-	});
+	));
 
-	m_planet_colors.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::MERCURY,
+		solar_constants::MERCURY_MASS_KG,
+		solar_constants::MERCURY_RADIUS_KM,
+		solar_constants::MERCURY_DISTANCE_KM,
+		solar_constants::MERCURY_TRACE_POINTS,
 		solar_constants::MERCURY_R,
 		solar_constants::MERCURY_G,
 		solar_constants::MERCURY_B
-	});
+	));
 
-	m_planet_colors.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::VENUS,
+		solar_constants::VENUS_MASS_KG,
+		solar_constants::VENUS_RADIUS_KM,
+		solar_constants::VENUS_DISTANCE_KM,
+		solar_constants::VENUS_TRACE_POINTS,
 		solar_constants::VENUS_R,
 		solar_constants::VENUS_G,
 		solar_constants::VENUS_B
-	});
+	));
 
-	m_planet_colors.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::EARTH,
+		solar_constants::EARTH_MASS_KG,
+		solar_constants::EARTH_RADIUS_KM,
+		solar_constants::EARTH_DISTANCE_KM,
+		solar_constants::EARTH_TRACE_POINTS,
 		solar_constants::EARTH_R,
 		solar_constants::EARTH_G,
 		solar_constants::EARTH_B
-	});
+	));
 
-	m_planet_colors.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::MARS,
+		solar_constants::MARS_MASS_KG,
+		solar_constants::MARS_RADIUS_KM,
+		solar_constants::MARS_DISTANCE_KM,
+		solar_constants::MARS_TRACE_POINTS,
 		solar_constants::MARS_R,
 		solar_constants::MARS_G,
 		solar_constants::MARS_B
-	});
+	));
 
-	m_planet_colors.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::JUPITER,
+		solar_constants::JUPITER_MASS_KG,
+		solar_constants::JUPITER_RADIUS_KM,
+		solar_constants::JUPITER_DISTANCE_KM,
+		solar_constants::JUPITER_TRACE_POINTS,
 		solar_constants::JUPITER_R,
 		solar_constants::JUPITER_G,
 		solar_constants::JUPITER_B
-	});
+	));
 
-	m_planet_colors.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::SATURN,
+		solar_constants::SATURN_MASS_KG,
+		solar_constants::SATURN_RADIUS_KM,
+		solar_constants::SATURN_DISTANCE_KM,
+		solar_constants::SATURN_TRACE_POINTS,
 		solar_constants::SATURN_R,
 		solar_constants::SATURN_G,
 		solar_constants::SATURN_B
-	});
+	));
 
-	m_planet_colors.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::URANUS,
+		solar_constants::URANUS_MASS_KG,
+		solar_constants::URANUS_RADIUS_KM,
+		solar_constants::URANUS_DISTANCE_KM,
+		solar_constants::URANUS_TRACE_POINTS,
 		solar_constants::URANUS_R,
 		solar_constants::URANUS_G,
 		solar_constants::URANUS_B
-	});
+	));
 
-	m_planet_colors.push_back({
+	m_planets.push_back(new Planet(
+		solar_constants::NEPTUNE,
+		solar_constants::NEPTUNE_MASS_KG,
+		solar_constants::NEPTUNE_RADIUS_KM,
+		solar_constants::NEPTUNE_DISTANCE_KM,
+		solar_constants::NEPTUNE_TRACE_POINTS,
 		solar_constants::NEPTUNE_R,
 		solar_constants::NEPTUNE_G,
 		solar_constants::NEPTUNE_B
-	});
+	));
+
+	prev_window_width = window_width;
+	prev_window_height = window_height;
 }
 
 bool SolarSystemEngine::initialize() {
@@ -162,22 +156,23 @@ bool SolarSystemEngine::initialize() {
 		return false;
 	}
 
-	// Create the planet simulation objects
-	for (const auto& [mass_kg, radius_km, distance_km] : m_planet_attributes) {
+	// Initialize planet attributes
+	for (int i = 0; i < m_planets.size(); i++) {
+		Planet* t_planet = m_planets[i];
+
 		double velocity_y = 0;
-		if (distance_km != 0) {
-			velocity_y = std::sqrt(solar_constants::G * solar_constants::SUN_MASS_KG / distance_km);
+
+		//! @note Only set the velocity of planets; not sun
+		if (t_planet->getDistance() != 0) {
+			velocity_y = std::sqrt(
+				solar_constants::G * solar_constants::SUN_MASS_KG / 
+				t_planet->getDistance()
+			);
 		}
 
-		Planet planet {
-			static_cast<double>(distance_km), 0, // x, y-coordinate
-			0, velocity_y,                       // x, y position velocity
-			0, 0,                                // x, y position acceleration
-			mass_kg,                             // mass
-			static_cast<double>(radius_km)       // radius
-		};
-
-		m_planets.push_back(planet);
+		t_planet->setPosition(static_cast<double>(t_planet->getDistance()), 0);
+		t_planet->setVelocity(0, velocity_y);
+		t_planet->setAcceleration(0, 0);
 	}
 
 	m_running = true;
@@ -219,6 +214,19 @@ void SolarSystemEngine::processInput() {
 
 	// Maintain the screen size
 	SDL_GetWindowSize(m_window, &window_width, &window_height);
+
+	// If window size changes, clear trace points
+	if ((window_width != prev_window_width) || (window_height != prev_window_height)) {
+		//! @note Sun has no trace points
+		for (int i = 1; i < m_planets.size(); i++) {
+			Planet* t_planet = m_planets[i];
+
+			t_planet->clearTracePoints();
+		}
+
+		prev_window_width = window_width;
+		prev_window_height = window_height;
+	}
 }
 
 double SolarSystemEngine::computeAcceleration(double p1, double p2, double sun_mass) {
@@ -244,29 +252,43 @@ void SolarSystemEngine::updateSimulation() {
 
 	//! @note do not update the sun's attributes
 	for (int i = 1; i < m_planets.size(); i++) {
+		Planet* t_planet = m_planets[i];
+		
+		std::tuple<double, double> t_planet_pos = t_planet->getPosition();
+		std::tuple<double, double> t_planet_vel = t_planet->getVelocity();
+		std::tuple<double, double> t_planet_acl = t_planet->getAcceleration();
+
+		// Unpack planet attributes
+		double x  = std::get<0>(t_planet_pos);
+		double y  = std::get<1>(t_planet_pos);
+		double vx = std::get<0>(t_planet_vel);
+		double vy = std::get<1>(t_planet_vel);
+		double ax = std::get<0>(t_planet_acl);
+		double ay = std::get<1>(t_planet_acl);
+
 		// Compute current acceleration
-		double curr_ax = computeAcceleration(m_planets[i].x, m_planets[i].y, solar_constants::SUN_MASS_KG);
-		double curr_ay = computeAcceleration(m_planets[i].y, m_planets[i].x, solar_constants::SUN_MASS_KG);
+		double curr_ax = computeAcceleration(x, y, solar_constants::SUN_MASS_KG);
+		double curr_ay = computeAcceleration(y, x, solar_constants::SUN_MASS_KG);
 
 		// Update planet position
-		m_planets[i].x = (
-			m_planets[i].x +
-			m_planets[i].vx * delta_t +
-			0.5 * m_planets[i].ax * std::pow(delta_t, 2)
-			);
-		m_planets[i].y = (
-			m_planets[i].y +
-			m_planets[i].vy * delta_t +
-			0.5 * m_planets[i].ay * std::pow(delta_t, 2)
-			);
+		double new_x = x + vx * delta_t + 0.5 * ax * std::pow(delta_t, 2);
+		double new_y = y + vy * delta_t + 0.5 * ay * std::pow(delta_t, 2);
 
 		// Compute new accelerations
-		m_planets[i].ax = computeAcceleration(m_planets[i].x, m_planets[i].y, solar_constants::SUN_MASS_KG);
-		m_planets[i].ay = computeAcceleration(m_planets[i].y, m_planets[i].x, solar_constants::SUN_MASS_KG);
+		double new_ax = computeAcceleration(new_x, new_y, solar_constants::SUN_MASS_KG);
+		double new_ay = computeAcceleration(new_y, new_x, solar_constants::SUN_MASS_KG);
 
 		// Compute new velocities
-		m_planets[i].vx = m_planets[i].vx + 0.5 * (curr_ax + m_planets[i].ax) * delta_t;
-		m_planets[i].vy = m_planets[i].vy + 0.5 * (curr_ay + m_planets[i].ay) * delta_t;
+		double new_vx = vx + 0.5 * (ax + new_ax) * delta_t;
+		double new_vy = vy + 0.5 * (ay + new_ay) * delta_t;
+
+		// Set new planet attributes
+		t_planet->setPosition(new_x, new_y);
+		t_planet->setVelocity(new_vx, new_vy);
+		t_planet->setAcceleration(new_ax, new_ay);
+
+		// Add trace points
+		t_planet->addTracePoint({new_x, new_y});
 	}
 }
 
@@ -286,6 +308,20 @@ void SolarSystemEngine::drawPlanet(double x, double y, double r) {
 	}
 }
 
+void SolarSystemEngine::drawTrace() {
+	for (int p = 0; p < m_planets.size(); p++) {
+		Planet* t_planet = m_planets[p];
+
+		std::vector<Vector2> t_trace_points = t_planet->getTracePoints();
+		for (int i = 0; i < t_trace_points.size(); i++) {
+			int x = static_cast<int>(t_trace_points[i].x / solar_constants::KM_PER_PIXEL + window_width / 2);
+			int y = static_cast<int>(t_trace_points[i].y / solar_constants::KM_PER_PIXEL + window_height / 2);
+
+			SDL_RenderDrawPoint(m_renderer, x, y);
+		}
+	}
+}
+
 void SolarSystemEngine::generateOutput() {
 	// Draw background color
 	SDL_SetRenderDrawColor(
@@ -300,7 +336,22 @@ void SolarSystemEngine::generateOutput() {
 	SDL_RenderClear(m_renderer);
 
 	// Draw the planets
-	for (int i = 0; i < m_planet_colors.size(); i++) {
+	for (int i = 0; i < m_planets.size(); i++) {
+		Planet* t_planet = m_planets[i];
+
+		// Draw trace for planets, not sun
+		if (i > 0) {
+			SDL_SetRenderDrawColor(
+				m_renderer,
+				ORBIT_TRACE_RED,
+				ORBIT_TRACE_GREEN,
+				ORBIT_TRACE_BLUE,
+				255
+			);
+
+			drawTrace();
+		}
+
 		//! @note the sun scale is smaller than the planet scale
 		uint32_t r_divisor = solar_constants::PLANET_CONVERSION;
 		if (i == 0) {
@@ -308,21 +359,24 @@ void SolarSystemEngine::generateOutput() {
 		}
 
 		// Set planet color
+		std::tuple<uint8_t, uint8_t, uint8_t> rgb = t_planet->getRGB();
+
 		SDL_SetRenderDrawColor(
 			m_renderer,
-			std::get<0>(m_planet_colors[i]),
-			std::get<1>(m_planet_colors[i]),
-			std::get<2>(m_planet_colors[i]),
+			std::get<0>(rgb), // R
+			std::get<1>(rgb), // G
+			std::get<2>(rgb), // B
 			255
 		);
 
-		drawPlanet(
-			m_planets[i].x / solar_constants::KM_PER_PIXEL + window_width / 2,
-			m_planets[i].y / solar_constants::KM_PER_PIXEL + window_height / 2,
-			m_planets[i].r / r_divisor
-		);
+		// Get planet position
+		std::tuple<double, double> position = t_planet->getPosition();
 
-		// Draw the planet orbital trace
+		drawPlanet(
+			std::get<0>(position) / solar_constants::KM_PER_PIXEL + window_width / 2,
+			std::get<1>(position) / solar_constants::KM_PER_PIXEL + window_height / 2,
+			t_planet->getRadius() / r_divisor
+		);
 	}
 
 	// Swap front and back buffers

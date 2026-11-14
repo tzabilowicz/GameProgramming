@@ -22,26 +22,11 @@ Planet Order (from sun)
 #pragma once
 
 #include "Constants.h"
+#include "Planet.h"
 
 #include <SDL2/SDL.h>
 #include <tuple>
 #include <vector>
-
-struct Planet {
-	double x;  // x-coordinate of planet center
-	double y;  // y-coordinate of planet center
-	double vx; // x position velocity
-	double vy; // y position velocity
-	double ax; // x position acceleration
-	double ay; // y position acceleration
-	double m;  // planet mass (kg)
-	double r;  // planet radius (km)
-};
-
-struct Vector2 {
-	double x;
-	double y;
-};
 
 class SolarSystemEngine {
 public:
@@ -99,6 +84,11 @@ private:
 	double computeAcceleration(double x, double y, double sun_mass);
 
 	/**
+	* @brief Draw the planet's orbital trace points.
+	*/
+	void drawTrace();
+
+	/**
 	* @brief Draw a planet in the simulation.
 	*
 	* @param[in] p1 first coordinate of planet
@@ -107,37 +97,29 @@ private:
 	*/
 	void drawPlanet(double x, double y, double r);
 
-	/**
-	* @brief Draws orbital trace line.
-	*
-	* @param[in] x point x-coordinate
-	* @param[in] y point y-coordinate
-	*/
-	void orbitalTrace(double x, double y);
-
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;
 	uint32_t m_ticks_count;
 	bool m_running;
 
 	// Simulation Object Data Structures
-	std::vector<Planet> m_planets;
-	std::vector<std::vector<Vector2>> m_orbital_trace_points;
-
-	std::vector<std::tuple<double, uint32_t, int64_t>> m_planet_attributes;
-	std::vector<std::tuple<uint8_t, uint8_t, uint8_t>> m_planet_colors;
+	std::vector<Planet*> m_planets;
 
 	// Simulation Loop Setings
 	const uint8_t FRAME_LIMIT = 16;
 	const float MAX_DELTA_TIME = 0.05f;
-	const uint16_t MAX_TRACE_POINTS = 800;
 
 	// Window Settings
 	const char* WINDOW_TITLE = "Solar System 2D Simulation";
 	int window_width = 2000;
 	int window_height = 2000;
+	int prev_window_width;
+	int prev_window_height;
 
 	const uint8_t WINDOW_BACKGROUND_RED = 0;
 	const uint8_t WINDOW_BACKGROUND_GREEN = 0;
 	const uint8_t WINDOW_BACKGROUND_BLUE = 0;
+	const uint8_t ORBIT_TRACE_RED = 100;
+	const uint8_t ORBIT_TRACE_GREEN = 100;
+	const uint8_t ORBIT_TRACE_BLUE = 100;
 };
