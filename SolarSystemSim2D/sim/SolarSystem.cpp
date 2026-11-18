@@ -119,6 +119,10 @@ SolarSystemEngine::SolarSystemEngine() :
 
 	prev_window_width = window_width;
 	prev_window_height = window_height;
+	
+	// Set the default scaling ratios
+	m_distance_scale = solar_constants::KM_PER_PIXEL;
+	m_planet_scale = 1.0;
 }
 
 bool SolarSystemEngine::initialize() {
@@ -198,10 +202,14 @@ void SolarSystemEngine::processInput() {
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
-			// Window exit
+		// Window exit
 		case SDL_QUIT:
 			m_running = false;
 			break;
+		// Scroll to zoom
+		case SDL_MOUSEWHEEL:
+			m_distance_scale += -event.wheel.y * KM_PER_SCROLL;
+			m_planet_scale += -event.wheel.y * RADIUS_SCALE_PER_SCROLL;
 		}
 	}
 
@@ -314,8 +322,8 @@ void SolarSystemEngine::drawTrace() {
 
 		std::vector<Vector2> t_trace_points = t_planet->getTracePoints();
 		for (int i = 0; i < t_trace_points.size(); i++) {
-			int x = static_cast<int>(t_trace_points[i].x / solar_constants::KM_PER_PIXEL + window_width / 2);
-			int y = static_cast<int>(t_trace_points[i].y / solar_constants::KM_PER_PIXEL + window_height / 2);
+			int x = static_cast<int>(t_trace_points[i].x / m_distance_scale + window_width / 2);
+			int y = static_cast<int>(t_trace_points[i].y / m_distance_scale + window_height / 2);
 
 			SDL_RenderDrawPoint(m_renderer, x, y);
 		}
@@ -357,6 +365,7 @@ void SolarSystemEngine::generateOutput() {
 		if (i == 0) {
 			r_divisor = solar_constants::SUN_CONVERSION;
 		}
+		r_divisor *= m_planet_scale;
 
 		// Set planet color
 		std::tuple<uint8_t, uint8_t, uint8_t> rgb = t_planet->getRGB();
@@ -373,8 +382,8 @@ void SolarSystemEngine::generateOutput() {
 		std::tuple<double, double> position = t_planet->getPosition();
 
 		drawPlanet(
-			std::get<0>(position) / solar_constants::KM_PER_PIXEL + window_width / 2,
-			std::get<1>(position) / solar_constants::KM_PER_PIXEL + window_height / 2,
+			std::get<0>(position) / m_distance_scale + window_width / 2,
+			std::get<1>(position) / m_distance_scale + window_height / 2,
 			t_planet->getRadius() / r_divisor
 		);
 	}

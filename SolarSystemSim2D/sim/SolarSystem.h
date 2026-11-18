@@ -102,6 +102,9 @@ private:
 	uint32_t m_ticks_count;
 	bool m_running;
 
+	uint32_t m_distance_scale;
+	float m_planet_scale;
+
 	// Simulation Object Data Structures
 	std::vector<Planet*> m_planets;
 
@@ -122,4 +125,7 @@ private:
 	const uint8_t ORBIT_TRACE_RED = 100;
 	const uint8_t ORBIT_TRACE_GREEN = 100;
 	const uint8_t ORBIT_TRACE_BLUE = 100;
+
+	const uint32_t KM_PER_SCROLL = 100000;
+	const float RADIUS_SCALE_PER_SCROLL = 0.05;
 };

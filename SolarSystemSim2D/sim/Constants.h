@@ -28,7 +28,7 @@ namespace solar_constants {
 
 	// Conversion Constants
 	const uint32_t SUN_CONVERSION    = 100000;
-	const uint32_t PLANET_CONVERSION = 10000;
+	const uint32_t PLANET_CONVERSION = 1000;
 	const uint32_t KM_PER_PIXEL      = 1000000;
 	const double   TIME_MULTIPLIER   = 1000000.0;
 
